@@ -1,0 +1,167 @@
+.\" Manpage for dedup.
+.\" Contact patrickhead@gmail.com to correct errors or typos
+.TH dedup 1 "8 January 2026" "1.0.0" "dedup User Manual"
+.SH NAME
+dedup \- deduplicate indentical files in a directory when compared to another directory
+.SH SYNOPSIS
+dedup [-d] [-f] [-q] -r <reference directory> -w <working directory>
+.SH DESCRIPTION
+A utility that removes files that contain identical content in a working directory when compared to all the files in a different reference directory.
+.SH OPTIONS
+  <reference directory> is root of directory to check for duplicates
+  <working directory> is root of directory where duplicates will be
+                             removed
+
+  -d -- required to actually remove duplicates, default: false
+
+  -f -- force; don't warn user before removal, default: false
+
+  -q -- quiet; don't display options or progress, default: false
+
+  -h -- this help screen
+
+NOTE:  It is highly recommended to run dedup without the -d option first,
+       then verify that all files listed for removal are OK to remove,
+       then re-run dedup with the -d option
+
+WARNING:  Once a file is removed by dedup it will be impossible or very
+          difficult to recover that file.
+
+.SH EXAMPLE
+
+Using the files in the tmp.a and tmp.b directories, located in the examples directory of the distribution:
+
+  ls -R tmp.a tmp.b
+
+yields:
+
+    tmp.a:
+      Makefile
+      a.dir
+      b.dir
+      build
+      fp
+      fp.c
+      picks
+
+    tmp.a/a.dir:
+      a.file
+      things
+
+    tmp.a/b.dir:
+      b.file
+      mystuff
+
+    tmp.b:
+      Makefile
+      a.dir
+      b.dir
+      build
+      fp
+      fp.c
+      picks
+
+    tmp.b/a.dir:
+      a.file
+      things
+
+    tmp.b/b.dir:
+      b.file
+      mystuff
+
+Assuming that the contents of tmp.a and tmp.b are identical:
+
+  dedup -r tmp.a -w tmp.b
+
+produces the following output:
+
+    reference directory : tmp.a
+    working directory   : tmp.b
+    remove files        : false
+    force removal       : false
+    quiet               : false
+    Would remove tmp.b/picks
+    Would remove tmp.b/a.dir/things
+    Would remove tmp.b/a.dir/a.file
+    Would remove tmp.b/b.dir/mystuff
+    Would remove tmp.b/b.dir/b.file
+    Would remove tmp.b/fp
+    Would remove tmp.b/fp.c
+    Would remove tmp.b/build
+    Would remove tmp.b/Makefile
+
+The above output simply indicates what files would be removed if the -d option had been used.
+
+Running:
+
+  dedup -df -r tmp.a -w tmp.b
+
+produces the following output:
+
+    reference directory : tmp.a
+    working directory   : tmp.b
+    remove files        : true
+    force removal       : true
+    quiet               : false
+    REMOVED tmp.b/picks
+    REMOVED tmp.b/a.dir/things
+    REMOVED tmp.b/a.dir/a.file
+    REMOVED tmp.b/b.dir/mystuff
+    REMOVED tmp.b/b.dir/b.file
+    REMOVED tmp.b/fp
+    REMOVED tmp.b/fp.c
+    REMOVED tmp.b/build
+    REMOVED tmp.b/Makefile
+
+The removals can be verified by again running:
+
+  ls -R tmp.a tmp.b
+
+yielding:
+
+    tmp.a:
+      Makefile
+      a.dir
+      b.dir
+      build
+      fp
+      fp.c
+      picks
+
+    tmp.a/a.dir:
+      a.file
+      things
+
+    tmp.a/b.dir:
+      b.file
+      mystuff
+
+    tmp.b:
+      a.dir
+      b.dir
+
+    tmp.b/a.dir:
+
+    tmp.b/b.dir:
+
+.SH "SEE ALSO"
+Nothing
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Patrick Head (patrickhead@gmail.com)
+.SH COPYRIGHT
+Copyright 2026 Patrick Head
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by the
+Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
