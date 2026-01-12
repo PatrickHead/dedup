@@ -110,7 +110,6 @@ struct dedup_item
 {
   llist_node *previous;  /**<  points to previous node in the list    */
   llist_node *next;      /**<  points to next node in the list  */
-  llist_node *current;   /**<  points to current node in the list  */
   char *pathname;        /**<  relative path and name of file   */
   uint64_t hash;         /**<  hash of contents of @a pathname  */
 };
